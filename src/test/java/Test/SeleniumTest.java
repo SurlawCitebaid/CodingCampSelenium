@@ -1,6 +1,7 @@
 package Test;
 
 import Models.Form;
+import Models.Planet;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -12,11 +13,13 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class SeleniumTest {
     private WebDriver driver;
+    private List<Planet> planets;
 
     @BeforeEach
     public void openBrowserAndSetDriver(){
@@ -89,6 +92,11 @@ public class SeleniumTest {
         Assertions.assertEquals("Thanks for your feedback James Logan",driver.findElement(By.cssSelector("div.popup-message")).getText());
     }
 
+    @Test
+    public void clickOnEarthTest(){
+
+    }
+
     @AfterEach
     public void quitDriver(){
         driver.quit();
@@ -99,6 +107,16 @@ public class SeleniumTest {
         options.addArguments("--remote-allow-origins=*");
         driver = new ChromeDriver(options);
     }
+
+    private void getAllPlanets(){
+        List<WebElement> planetElements = driver.findElements(By.cssSelector(".planet"));
+        planets = new ArrayList<Planet>();
+
+        for(WebElement planetElement : planetElements){
+            planets.add(new Planet());
+        }
+    }
+
     //Test format
     //Arrange
     //Act
