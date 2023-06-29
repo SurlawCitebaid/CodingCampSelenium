@@ -20,8 +20,8 @@ public class Planet {
 //        return planetElement.findElement(By.className("distance")).getText();
 //    }
 
-    public String  getDistFromTheSun(){
-        return planetElement.findElement(By.className("distance")).getText();
+    public long getDistFromTheSun(){
+        return Long.parseLong(planetElement.findElement(By.className("distance")).getText().replaceAll("[^\\d.]", ""));
     }
 
     public String getRadius(){

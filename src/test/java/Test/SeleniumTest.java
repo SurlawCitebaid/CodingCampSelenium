@@ -4,6 +4,7 @@ import Models.Form;
 import Models.Planet;
 import Models.PlanetPage;
 import Models.ToolBar;
+import Strategies.NameMatchingStrategy;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NotFoundException;
@@ -98,36 +99,23 @@ public class SeleniumTest {
     public void findAPlanetByNameTest(){
         driver.get("https://d18u5zoaatmpxx.cloudfront.net/#/planets");
         PlanetPage planetPage = new PlanetPage(driver);
-
-        ArrayList<Planet> planets = planetPage.getAllPlanets();
-        Planet earth  = planetPage.getPlanetByName("Earth",planets);
-
-        System.out.println(earth.getName());
-        System.out.println(earth.getRadius());
-        System.out.println(earth.getDistFromTheSun());
+        planetPage.getPlanet(planet -> planet.getName().equals("Earth"));
     }
 
     @Test
     public void clickPlanetExploreButton(){
         new ToolBar(driver).clickByButtonName("planets");
         PlanetPage planetPage = new PlanetPage(driver);
-        ArrayList<Planet> planets = planetPage.getAllPlanets();
-        planetPage.getPlanetByName("Earth", planets).clickExploreButton();
+        planetPage.getPlanet(planet -> planet.getName().equals("Earth")).clickExploreButton();
     }
 
     @Test
     public void findPlanetByDistance(){
         new ToolBar(driver).clickByButtonName("planets");
         PlanetPage planetPage = new PlanetPage(driver);
-        ArrayList<Planet> planets = planetPage.getAllPlanets();
-
-        for(Planet planet : planets){
-            if(planet.getDistFromTheSun().equals("2,871,000,000 km")){
-                planet.clickExploreButton();
-                return;
-            }
-        }
-        throw new NotFoundException("Planet was not found");
+        Planet planetFound = planetPage.getPlanet(planet -> planet.getDistFromTheSun() == 2871000000l);
+        System.out.println(planetFound.getName());
+        Assertions.assertNotEquals(null,planetFound);
     }
 
     @AfterEach
