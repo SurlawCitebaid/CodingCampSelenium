@@ -1,15 +1,31 @@
 package Models;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 public class Planet {
-    WebDriver driver;
-    String name;
-    float distanceFromTheSun;
-    float radius;
+    WebElement planetElement;
 
 
-    public Planet(WebDriver driver, String name, float distanceFromTheSun, float radius){
+    public Planet(WebElement planetElement){
+        this.planetElement = planetElement;
+    }
+
+    public String getName(){
+        return planetElement.findElement(By.tagName("h2")).getText();
+    }
+
+    public String getDistFromTheSun(){
+        return planetElement.findElement(By.className("distance")).getText();
+    }
+
+    public String getRadius(){
+        return planetElement.findElement(By.className("radius")).getText();
+    }
+
+    public void clickExploreButton(){
+        planetElement.findElement(By.tagName("button")).click();
     }
 
     //Name

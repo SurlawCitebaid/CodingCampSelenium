@@ -2,8 +2,11 @@ package Test;
 
 import Models.Form;
 import Models.Planet;
+import Models.PlanetPage;
+import Models.ToolBar;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -19,7 +22,7 @@ import java.util.List;
 
 public class SeleniumTest {
     private WebDriver driver;
-    private List<Planet> planets;
+
 
     @BeforeEach
     public void openBrowserAndSetDriver(){
@@ -77,8 +80,7 @@ public class SeleniumTest {
     public void ClickandSubmitFormTest(){
 
         //Arrange
-        driver.findElement(By.cssSelector("a[aria-label='forms']")).click();
-        new WebDriverWait(driver, Duration.ofSeconds(2)).until(ExpectedConditions.urlToBe("https://d18u5zoaatmpxx.cloudfront.net/#/forms"));
+        new ToolBar(driver).clickByButtonName("forms");
 
         //Act
         Form form = new Form(driver);
@@ -93,8 +95,40 @@ public class SeleniumTest {
     }
 
     @Test
-    public void clickOnEarthTest(){
+    public void findAPlanetByNameTest(){
+        driver.get("https://d18u5zoaatmpxx.cloudfront.net/#/planets");
+        PlanetPage planetPage = new PlanetPage(driver);
 
+        ArrayList<Planet> planets = planetPage.getAllPlanets();
+        Planet earth  = planetPage.getPlanetByName("Earth",planets);
+
+        System.out.println(earth.getName());
+        System.out.println(earth.getRadius());
+        System.out.println(earth.getDistFromTheSun());
+    }
+
+    @Test
+    public void clickPlanetExploreButton(){
+        new ToolBar(driver).clickByButtonName("planets");
+        PlanetPage planetPage = new PlanetPage(driver);
+        ArrayList<Planet> planets = planetPage.getAllPlanets();
+        planetPage.getPlanetByName("Earth", planets).clickExploreButton();
+    }
+
+    @Test
+    public void findPlanetByDistance(){
+        new ToolBar(driver).clickByButtonName("planets");
+        PlanetPage planetPage = new PlanetPage(driver);
+        ArrayList<Planet> planets = planetPage.getAllPlanets();
+
+        for(Planet planet : planets){
+            if(planet.getDistFromTheSun().equals("2,871,000,000 km")){
+                System.out.println(planet.getName());
+                Assertions.assertEquals("2,871,000,000 km",planet.getDistFromTheSun());
+                return;
+            }
+        }
+        throw new NotFoundException("Planet was not found");
     }
 
     @AfterEach
@@ -108,14 +142,7 @@ public class SeleniumTest {
         driver = new ChromeDriver(options);
     }
 
-    private void getAllPlanets(){
-        List<WebElement> planetElements = driver.findElements(By.cssSelector(".planet"));
-        planets = new ArrayList<Planet>();
 
-        for(WebElement planetElement : planetElements){
-            planets.add(new Planet());
-        }
-    }
 
     //Test format
     //Arrange
