@@ -16,7 +16,11 @@ public class Planet {
         return planetElement.findElement(By.tagName("h2")).getText();
     }
 
-    public String getDistFromTheSun(){
+//    public String getDistFromTheSun(){
+//        return planetElement.findElement(By.className("distance")).getText();
+//    }
+
+    public String  getDistFromTheSun(){
         return planetElement.findElement(By.className("distance")).getText();
     }
 

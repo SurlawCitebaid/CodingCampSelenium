@@ -123,8 +123,7 @@ public class SeleniumTest {
 
         for(Planet planet : planets){
             if(planet.getDistFromTheSun().equals("2,871,000,000 km")){
-                System.out.println(planet.getName());
-                Assertions.assertEquals("2,871,000,000 km",planet.getDistFromTheSun());
+                planet.clickExploreButton();
                 return;
             }
         }
